@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daftar Siswa Terdaftar</title>
+  <style>
+    :root{
+      --bg:#f6f8fc;
+      --card:#fff;
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+    *{box-sizing:border-box;font-family:"Poppins",sans-serif;}
+    body{margin:0;background:var(--bg);}
+    header{
+      background:var(--accent);
+      color:#fff;
+      padding:14px 22px;
+      font-size:18px;
+      font-weight:600;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    header a{
+      color:#fff;
+      text-decoration:none;
+      background:rgba(255,255,255,0.15);
+      padding:6px 12px;
+      border-radius:6px;
+      transition:.2s;
+    }
+    header a:hover{background:rgba(255,255,255,0.25);}
+    .container{max-width:1100px;margin:30px auto;padding:20px;}
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+    h1{margin-top:0;font-size:22px;color:var(--accent);}
+    table{width:100%;border-collapse:collapse;margin-top:16px;}
+    th,td{padding:10px 8px;text-align:left;font-size:14px;border-bottom:1px solid #eef2f7;}
+    th{background:#f3f6fa;}
+    .actions button{
+      background:transparent;
+      border:0;
+      cursor:pointer;
+      font-size:16px;
+    }
+    .info{font-size:13px;color:var(--muted);margin-top:10px;}
+  </style>
+</head>
+<body>
+  <header>
+    <div>Yang Mendaftar</div>
+    <a href="pendaftaran.html">+ Tambah Siswa</a>
+    <a href="Home_admin.php">Home Admin</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1>Data Pendaftar</h1>
+      <table id="tableDaftar">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nama Siswa</th>
+            <th>NIS</th>
+            <th>Tgl Lahir</th>
+            <th>Nama Ibu</th>
+            <th>Nama Ayah</th>
+            <th>Alamat</th>
+            <th>Kelas</th>
+            <th>Keterangan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="info">Total pendaftar: <span id="countSaved">0</span></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "dataPendaftaranSiswa";
+    const tableBody = document.querySelector("#tableDaftar tbody");
+    const countSaved = document.getElementById("countSaved");
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+      catch { return []; }
+    }
+
+    function saveData(arr) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      renderTable();
+    }
+
+    function renderTable() {
+      const data = loadData();
+      tableBody.innerHTML = "";
+      data.forEach((r, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${r.nama}</td>
+          <td>${r.nis || "-"}</td>
+          <td>${r.tgl_lahir}</td>
+          <td>${r.nama_ibu}</td>
+          <td>${r.nama_ayah}</td>
+          <td>${r.alamat}</td>
+          <td>${r.kelas}</td>
+          <td>${r.keterangan || "-"}</td>
+          <td class="actions"><button onclick="hapusData(${i})">🗑</button></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+      countSaved.textContent = data.length;
+    }
+
+    function hapusData(i) {
+      if (!confirm("Hapus data ini?")) return;
+      const arr = loadData();
+      arr.splice(i, 1);
+      saveData(arr);
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>

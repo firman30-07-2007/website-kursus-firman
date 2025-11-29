@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Setoran - Firmansyah</title>
+<style>
+  :root {
+    --bg: #f4f7fc;
+    --card: #fff;
+    --accent: #2563eb;
+    --accent-dark: #1e40af;
+    --radius: 18px;
+    --shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+    color: #111827;
+  }
+
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  main {
+    max-width: 450px;
+    background: var(--card);
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--accent);
+  }
+
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 15px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 5px var(--accent);
+  }
+
+  button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: var(--accent-dark);
+  }
+
+  a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  img {
+    margin-top: 10px;
+    width: 100px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>💰 Form Setoran Siswa</header>
+<main>
+  <h2>Tambah Setoran</h2>
+
+  <label>Nama</label>
+  <input type="text" id="nama" placeholder="Masukkan nama siswa">
+
+  <label>Tanggal Setoran</label>
+  <input type="date" id="tanggal">
+
+  <label>Metode Pembayaran</label>
+  <select id="metode">
+    <option value="">-- Pilih Metode --</option>
+    <option>Cash</option>
+    <option>Transfer</option>
+  </select>
+
+  <label>Nominal Setoran (Rp)</label>
+  <input type="number" id="nominal" placeholder="Contoh: 50000">
+
+  <label>Upload Foto Bukti</label>
+  <input type="file" id="foto" accept="image/*">
+
+  <img id="preview" style="display:none;">
+
+  <button onclick="simpanData()">Simpan Setoran</button>
+
+  <a href="Home_siswa.php" class="btn-back">⬅ Kembali</a>
+
+</main>
+
+<script>
+  const fotoInput = document.getElementById('foto');
+  const preview = document.getElementById('preview');
+
+  fotoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function simpanData() {
+    const nama = document.getElementById('nama').value.trim();
+    const tanggal = document.getElementById('tanggal').value;
+    const metode = document.getElementById('metode').value;
+    const nominal = parseInt(document.getElementById('nominal').value);
+    const foto = preview.src;
+
+    if (!nama || !tanggal || !metode || !nominal || !foto) {
+      alert("⚠ Lengkapi semua data sebelum menyimpan!");
+      return;
+    }
+
+    const dataBaru = {
+      nama, tanggal, metode, nominal,
+      foto, status: 'Terkonfirmasi'
+    };
+
+    const dataLama = JSON.parse(localStorage.getItem('dataTransaksi')) || [];
+    dataLama.push(dataBaru);
+    localStorage.setItem('dataTransaksi', JSON.stringify(dataLama));
+
+    alert("✅ Data setoran berhasil disimpan!");
+    window.location.href = "file:///C:/xamp/htdocs/project_web_pkl/projekpkl/siswa/riwayat.html";
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<style>
+.btn-back {
+    display: inline-block;
+    background: #6b7280;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.btn-back:hover {
+    background: #4b5563;
+}
+</style>

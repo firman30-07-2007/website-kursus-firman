@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Pendaftaran Siswa</title>
+  <style>
+    :root{
+      --bg:#f6f8fc;
+      --card:#fff;
+      --accent:#2563eb;
+      --text:#111;
+      --muted:#6b7280;
+      --shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+    *{box-sizing:border-box;font-family:"Poppins",sans-serif;}
+    body{margin:0;background:var(--bg);color:var(--text);}
+    header{
+      background:var(--accent);
+      color:#fff;
+      padding:14px 22px;
+      font-size:18px;
+      font-weight:600;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    header a{
+      color:#fff;
+      text-decoration:none;
+      background:rgba(255,255,255,0.15);
+      padding:6px 12px;
+      border-radius:6px;
+      transition:.2s;
+    }
+    header a:hover{background:rgba(255,255,255,0.25);}
+    .container{max-width:900px;margin:30px auto;padding:20px;}
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+    h1{margin-top:0;margin-bottom:16px;font-size:22px;color:var(--accent);}
+    form .row{display:flex;gap:12px;margin-bottom:10px;}
+    form .col{flex:1;}
+    label{display:block;margin-bottom:5px;font-size:13px;color:var(--muted);}
+    input,textarea,select{
+      width:100%;
+      padding:10px;
+      border:1px solid #e6e9ef;
+      border-radius:8px;
+      font-size:14px;
+      outline:none;
+      transition:.2s;
+    }
+    input:focus,textarea:focus{border-color:var(--accent);}
+    textarea{resize:vertical;}
+    .btn{
+      background:var(--accent);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      transition:.2s;
+    }
+    .btn:hover{opacity:.9;}
+    .btn.ghost{
+      background:transparent;
+      color:var(--accent);
+      border:1px solid rgba(37,99,235,0.3);
+    }
+    .footer-info{font-size:13px;color:var(--muted);margin-top:14px;text-align:right;}
+    @media(max-width:720px){.row{flex-direction:column;}}
+  </style>
+</head>
+<body>
+  <header>
+    <div>Form Pendaftaran Siswa</div>
+    <a href="Home_siswa.php" class="btn-back">⬅ Kembali</a>
+
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <form id="daftarForm" autocomplete="off">
+        <div class="row">
+          <div class="col">
+            <label>Nama Siswa *</label>
+            <input id="nama" type="text" required placeholder="Masukkan nama lengkap" />
+          </div>
+          <div class="col">
+            <label>Tanggal Lahir *</label>
+            <input id="tgl_lahir" type="date" required />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Nama Ibu *</label>
+            <input id="nama_ibu" type="text" required placeholder="Masukkan nama ibu" />
+          </div>
+          <div class="col">
+            <label>Nama Ayah *</label>
+            <input id="nama_ayah" type="text" required placeholder="Masukkan nama ayah" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Alamat *</label>
+            <input id="alamat" type="text" required placeholder="Alamat lengkap siswa" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>NIS / ID (Opsional)</label>
+            <input id="nis" type="text" placeholder="Boleh dikosongkan" />
+          </div>
+          <div class="col">
+            <label>Kelas *</label>
+            <input id="kelas" type="text" required placeholder="Contoh: 10 IPA 1" />
+          </div>
+        </div>
+
+        <div>
+          <label>Keterangan Tambahan (Opsional)</label>
+          <textarea id="keterangan" rows="2" placeholder="Misal: siswa pindahan atau prestasi..."></textarea>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn" type="submit">Simpan Pendaftaran</button>
+          <button class="btn ghost" id="clearForm" type="button">Kosongkan</button>
+        </div>
+      </form>
+      <div class="footer-info">Data otomatis tersimpan di penyimpanan browser.</div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("daftarForm");
+    const STORAGE_KEY = "dataPendaftaranSiswa";
+
+    const loadData = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const saveData = (arr) => localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = {
+        id: Date.now(),
+        nama: nama.value.trim(),
+        tgl_lahir: tgl_lahir.value,
+        nama_ibu: nama_ibu.value.trim(),
+        nama_ayah: nama_ayah.value.trim(),
+        alamat: alamat.value.trim(),
+        nis: nis.value.trim(),
+        kelas: kelas.value.trim(),
+        keterangan: keterangan.value.trim(),
+      };
+      if (!data.nama || !data.tgl_lahir || !data.nama_ibu || !data.nama_ayah || !data.alamat || !data.kelas)
+        return alert("⚠ Semua kolom wajib diisi kecuali NIS & Keterangan!");
+
+      const arr = loadData();
+      arr.unshift(data);
+      saveData(arr);
+      form.reset();
+      alert("✅ Pendaftaran berhasil disimpan!");
+    });
+
+    document.getElementById("clearForm").addEventListener("click", () => {
+      if (confirm("Kosongkan form?")) form.reset();
+    });
+  </script>
+</body>
+</html>
